@@ -1,0 +1,16 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db
+.agent-coach/
+.ui-style-director/
+
+/.opc/run.json
+/.opc/events.jsonl
+/.opc/events.jsonl.*
+/.opc/.opc-hook.lock
