@@ -1,0 +1,39 @@
+{
+  "name": "@agent-coach/dsh",
+  "version": "0.1.0",
+  "description": "DeepSeek Harness rc.7 Bundle for the local Agent Coach control plane.",
+  "type": "module",
+  "main": "index.mjs",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "cordis.patch.yml",
+    "runtime/*.mjs",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "build": "node ../scripts/build-dsh-bundle.mjs",
+    "prepack": "node ../scripts/build-dsh-bundle.mjs"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh-llm": "0.1.0-rc.7",
+    "@deepseek-ai/dsh-mcp-client": "0.1.0-rc.7"
+  },
+  "engines": {
+    "node": ">=24.15.0 <25"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coconilu/agent-coach.git",
+    "directory": "integrations/dsh"
+  },
+  "keywords": ["deepseek-harness", "dsh-bundle", "agent-memory", "mcp"]
+}

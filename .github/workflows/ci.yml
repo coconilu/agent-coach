@@ -1,0 +1,152 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 24.15.0
+  PNPM_VERSION: 10.18.3
+  CI: true
+
+jobs:
+  privacy-cross-platform:
+    name: Privacy gate (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - name: Check out public source
+        uses: actions/checkout@v4
+
+      - name: Use exact Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Test privacy and release gates
+        run: node --test tests/privacy/*.test.mjs
+
+      - name: Scan public checkout
+        run: node scripts/privacy-scan.mjs --root . --json --output privacy-report.json
+
+      - name: Upload privacy evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: privacy-${{ matrix.os }}
+          path: privacy-report.json
+          if-no-files-found: error
+          retention-days: 14
+
+  windows-build-test:
+    name: Windows build, test, evaluation and package gate
+    needs: privacy-cross-platform
+    runs-on: windows-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Check out public source
+        uses: actions/checkout@v4
+
+      - name: Install exact pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      - name: Use exact Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Verify toolchain versions
+        run: |
+          if ((node --version) -ne ("v" + $env:NODE_VERSION)) { throw "Unexpected Node version" }
+          if ((pnpm --version) -ne $env:PNPM_VERSION) { throw "Unexpected pnpm version" }
+
+      - name: Install from the locked dependency graph
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Core and Dashboard
+        run: pnpm build
+
+      - name: Build host artifacts
+        run: |
+          pnpm --filter @agent-coach/dsh build
+          node integrations/scripts/build-kimi-plugin.mjs
+
+      - name: Product tests
+        run: pnpm test
+
+      - name: Integration, evaluation and privacy harness tests
+        run: node --test tests/integrations/*.test.mjs tests/outcome/*.test.mjs tests/privacy/*.test.mjs
+
+      - name: Core baseline/treatment evaluation
+        run: >-
+          node scripts/run-outcome-eval.mjs
+          --json-output .artifacts/qa/outcome-report.json
+          --markdown-output .artifacts/qa/outcome-report.md
+          --samples 50
+          --warmup 10
+
+      - name: Scan built checkout
+        run: node scripts/privacy-scan.mjs --root . --json --output .artifacts/qa/privacy-report.json
+
+      - name: Audit locked dependencies
+        run: |
+          pnpm audit --json > .artifacts/qa/dependency-audit.json
+          try {
+            $audit = Get-Content -Raw .artifacts/qa/dependency-audit.json | ConvertFrom-Json
+          } catch {
+            Get-Content .artifacts/qa/dependency-audit.json
+            throw "Dependency audit did not return parseable JSON"
+          }
+          if ($null -eq $audit.metadata.vulnerabilities) {
+            Get-Content .artifacts/qa/dependency-audit.json
+            throw "Dependency audit metadata is missing"
+          }
+          $blocking = [int]$audit.metadata.vulnerabilities.high + [int]$audit.metadata.vulnerabilities.critical
+          if ($blocking -gt 0) {
+            Get-Content .artifacts/qa/dependency-audit.json
+            throw "Dependency audit found $blocking high/critical vulnerability records"
+          }
+
+      - name: Generate and verify release checksums
+        run: |
+          node scripts/release-checksums.mjs --output .artifacts/release/SHA256SUMS.txt package.json README.md LICENSE dist integrations/dist plugins/agent-coach integrations/dsh/package.json integrations/dsh/README.md integrations/dsh/cordis.patch.yml integrations/dsh/index.mjs integrations/dsh/runtime .agents/plugins/marketplace.json .kimi-plugin/plugin.json .kimi-plugin/marketplace.json
+          node scripts/release-checksums.mjs --verify .artifacts/release/SHA256SUMS.txt
+
+      - name: Upload QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-qa-evidence
+          path: .artifacts/qa
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload release checksums
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-checksums
+          path: .artifacts/release/SHA256SUMS.txt
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 14

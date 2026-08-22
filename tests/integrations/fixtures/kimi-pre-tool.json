@@ -1,0 +1,10 @@
+{
+  "hook_event_name": "PreToolUse",
+  "session_id": "synthetic-kimi-session",
+  "cwd": "<SYNTHETIC_HOME>/kimi-project",
+  "tool_name": "Bash",
+  "tool_call_id": "synthetic-kimi-tool",
+  "tool_input": {
+    "command": "Set-Content synthetic.txt SYNTHETIC_KIMI_ARGUMENT"
+  }
+}

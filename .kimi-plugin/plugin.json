@@ -1,0 +1,56 @@
+{
+  "$schema": "https://kimi.com/schemas/kimi.plugin.schema.json",
+  "name": "agent-coach",
+  "version": "0.1.0",
+  "description": "Plan-aware coaching and governed memory for Kimi Code.",
+  "keywords": ["agent-memory", "coaching", "governance"],
+  "author": "coconilu",
+  "homepage": "https://github.com/coconilu/agent-coach",
+  "license": "MIT",
+  "skills": "./plugins/agent-coach/skills/",
+  "systemPromptPath": "./plugins/agent-coach/SYSTEM.md",
+  "sessionStart": {
+    "skill": "agent-coach"
+  },
+  "mcpServers": {
+    "agent_coach": {
+      "command": "node",
+      "args": ["./plugins/agent-coach/scripts/mcp-entry.mjs"],
+      "cwd": "./"
+    }
+  },
+  "hooks": [
+    {
+      "event": "UserPromptSubmit",
+      "command": "node ./plugins/agent-coach/scripts/hook-entry.mjs --host kimi",
+      "timeout": 3
+    },
+    {
+      "event": "PreToolUse",
+      "command": "node ./plugins/agent-coach/scripts/hook-entry.mjs --host kimi",
+      "timeout": 2
+    },
+    {
+      "event": "PostToolUse",
+      "command": "node ./plugins/agent-coach/scripts/hook-entry.mjs --host kimi",
+      "timeout": 2
+    },
+    {
+      "event": "Stop",
+      "command": "node ./plugins/agent-coach/scripts/hook-entry.mjs --host kimi",
+      "timeout": 3
+    },
+    {
+      "event": "SessionEnd",
+      "command": "node ./plugins/agent-coach/scripts/hook-entry.mjs --host kimi",
+      "timeout": 2
+    }
+  ],
+  "interface": {
+    "displayName": "Agent Coach",
+    "shortDescription": "Recall governed experience before consequential work",
+    "longDescription": "Connect Kimi Code to the local Agent Coach daemon without retaining raw hook payloads.",
+    "developerName": "coconilu",
+    "websiteURL": "https://github.com/coconilu/agent-coach"
+  }
+}

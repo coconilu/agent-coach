@@ -1,0 +1,39 @@
+[
+  {
+    "name": "read file",
+    "action": "read_file",
+    "arguments": {},
+    "expected": "read"
+  },
+  {
+    "name": "ripgrep shell",
+    "action": "exec_command",
+    "arguments": { "cmd": "rg --files" },
+    "expected": "read"
+  },
+  {
+    "name": "shell redirection",
+    "action": "exec_command",
+    "arguments": { "cmd": "Get-Content input.txt > output.txt" },
+    "expected": "unknown"
+  },
+  {
+    "name": "known patch",
+    "action": "apply_patch",
+    "arguments": {},
+    "expected": "write"
+  },
+  {
+    "name": "unknown tool",
+    "action": "future_tool",
+    "arguments": {},
+    "expected": "unknown"
+  },
+  {
+    "name": "hosted bypass",
+    "action": "hosted:browser",
+    "arguments": {},
+    "expected": "unknown",
+    "coverage": "unsupported"
+  }
+]

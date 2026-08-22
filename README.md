@@ -18,19 +18,19 @@ Agent Coach 是一个本地优先、Agent 无关的“计划辅导 + 可治理�
 
 ## 当前状态
 
-项目处于 **M0 契约冻结阶段**。里程碑、协议、安全边界和验收清单必须先经独立复审放行，之后才允许进入业务实现。
+`v0.1.0` MVP 已完成本地实现与 H0/H1 验收：Core、Daemon、MCP、CLI、Dashboard，以及 Codex `0.147.0`、Kimi Code `0.38.0`、DSH `0.1.0-rc.7` 的真实宿主加载均已通过。H2 真实模型行为仍是条件式未验收项，不能被 H1 替代。
 
-当前没有发布“已支持”或“已经变聪明”的产品声明。
+当前确定性评测结果：Treatment `10/10`、相关 Plan Delta `3/3`、不相关任务负迁移 `0`；1000 条合成记忆下 keyless prepare P95 约 `24 ms`。这些结果证明协议与检索闭环，不代表任意模型或任意任务都必然提升。
 
 ## 首发支持基线
 
 | 组件 | 首发验收版本 | 当前证据语义 |
 |---|---:|---|
-| Windows | Windows 11 x64 | 阻断平台 |
+| Windows | Windows 11 x64 | 目标阻断平台；当前主机已通过，干净远端 CI 待读回 |
 | Node.js | `24.15.0` | 本机已确认，使用原生 `node:sqlite` |
-| Codex CLI | `0.147.0` | 待真实 canary |
-| Kimi Code | `0.38.0` | 待真实 canary |
-| DeepSeek Harness | `0.1.0-rc.7` | 待真实 Bundle canary |
+| Codex CLI | `0.147.0` | H1：Marketplace/Plugin/Skill/MCP/Hook/卸载 PASS |
+| Kimi Code | `0.38.0` | H1：交互安装、Skill 1、MCP 1/1、卸载 PASS |
+| DeepSeek Harness | `0.1.0-rc.7` | H1：tgz Bundle/配置合成/MCP/卸载 PASS |
 | TencentDB Agent Memory | Provider 合同 | 实验性；真实 roundtrip 未通过前不称“已验证集成” |
 
 版本不匹配时只能显示 `unverified` 或 `unsupported`，不得展示绿色“已验证”。
@@ -57,6 +57,65 @@ Agent Coach 是一个本地优先、Agent 无关的“计划辅导 + 可治理�
 - 有 API Key 时可显式启用外部 Memory Provider，但不改变权威边界。
 
 MVP 明确不做：LLM Proxy、替代 Agent Harness、团队/云多租户、公共插件市场、无限期原始聊天保存、自动发布生成的 Skill。
+
+## 五分钟本地体验
+
+前置：Node.js `24.15.x`、pnpm `10.18.3`。
+
+```powershell
+git clone https://github.com/coconilu/agent-coach.git
+cd agent-coach
+pnpm install --frozen-lockfile
+pnpm build
+node dist/cli.js init
+node dist/cli.js demo
+node dist/cli.js start
+```
+
+`start` 会输出一个两分钟内有效的一次性 `dashboard_url`。在浏览器打开后，URL 会自动移除 nonce/CSRF 参数；Dashboard 使用 SameSite session、CSRF、Origin/Host 检查和 CSP。默认数据位于用户本地目录，不在源码 checkout 内。
+
+常用命令：
+
+```powershell
+node dist/cli.js doctor
+node dist/cli.js review
+node dist/cli.js search "配置读回"
+node dist/cli.js export --output agent-coach-export.json
+```
+
+## 接入现有 Agent
+
+先保持 `agent-coach start` 运行。首次安装默认为 `advisory`；只有用户显式设置 `AGENT_COACH_MODE=enforce` 时，健康 Gateway 下的 covered write/unknown 才会拒绝未辅导动作。Hook 不是安全沙箱，Gateway/Hook 故障始终 fail-open 并显示 degraded。
+
+### Codex 0.147
+
+```powershell
+codex plugin marketplace add coconilu/agent-coach
+codex plugin add agent-coach@agent-coach
+```
+
+新建 Codex 任务，并在 `/hooks` 中审查和信任 bundled Hooks。Hosted Tool 和特殊 opt-out 路径不属于 covered gate。
+
+### Kimi Code 0.38
+
+GitHub Release 发布后，在 Kimi 中运行：
+
+```text
+/plugins install https://github.com/coconilu/agent-coach/releases/latest/download/agent-coach-kimi.zip
+/reload
+/plugins info agent-coach
+```
+
+Kimi 不接受本地 ZIP 文件路径；本地开发需先解压，再 `/plugins install <目录>`。完整说明见 [Kimi 集成](integrations/kimi/README.md)。
+
+### DeepSeek Harness rc.7
+
+```powershell
+pnpm --filter @agent-coach/dsh pack --pack-destination integrations/dist
+dsh plugin --profile <profile> add .\integrations\dist\agent-coach-dsh-0.1.0.tgz
+```
+
+详细限制见 [DSH Bundle](integrations/dsh/README.md)。
 
 ## 契约导航
 

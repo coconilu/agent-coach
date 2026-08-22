@@ -145,6 +145,7 @@ POST /v1/turns/{id}/commit
 POST /v1/gates/check
 POST /v1/turns/{id}/complete
 POST /v1/feedback
+POST /v1/explain
 GET  /v1/knowledge/search
 GET  /v1/candidates
 POST /v1/candidates/{id}/preview

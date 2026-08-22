@@ -1,0 +1,20 @@
+{
+  "name": "agent-coach",
+  "interface": {
+    "displayName": "Agent Coach"
+  },
+  "plugins": [
+    {
+      "name": "agent-coach",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agent-coach"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

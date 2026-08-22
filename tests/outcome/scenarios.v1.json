@@ -1,0 +1,335 @@
+{
+  "schema_version": "agent-coach/outcome-scenarios/v1",
+  "seed": 20260823,
+  "description": "Eight deterministic baseline/treatment scenarios. All identities and content are synthetic.",
+  "thresholds": {
+    "treatment_completion_not_below_baseline": true,
+    "relevant_plan_delta_minimum": 2,
+    "relevant_scenario_count": 3,
+    "control_negative_migration_maximum": 0,
+    "prepare_p95_ms_maximum": 300,
+    "guidance_items_maximum": 8,
+    "estimated_tokens_maximum": 1200
+  },
+  "knowledge": [
+    {
+      "id": "synthetic-memory-package-manager",
+      "type": "preference",
+      "status": "approved",
+      "scope": "global",
+      "authority": "canonical",
+      "title": "Use the locked package manager",
+      "summary": "For JavaScript release work, use pnpm with the frozen lockfile and never substitute npm.",
+      "applies_when": ["javascript", "package", "release", "codex", "kimi", "deepseek-harness"]
+    },
+    {
+      "id": "synthetic-memory-preserve-config",
+      "type": "experience",
+      "status": "approved",
+      "scope": "project:synthetic-agent-host",
+      "authority": "canonical",
+      "title": "Preserve unrelated host configuration",
+      "summary": "A prior integration overwrote an unrelated sentinel. Preview, back up owned targets, read back, run a fresh-process canary, and roll back on failure.",
+      "applies_when": ["integration", "install", "host", "configuration", "kimi"]
+    },
+    {
+      "id": "synthetic-memory-release-gate",
+      "type": "procedure",
+      "status": "approved",
+      "scope": "project:synthetic-release",
+      "authority": "canonical",
+      "title": "Release evidence gate",
+      "summary": "Before packaging, run build, test, privacy scan, and SHA-256 generation. A timeout is not a pass.",
+      "applies_when": ["release", "package", "artifact", "publish"]
+    },
+    {
+      "id": "synthetic-memory-doc-tone",
+      "type": "preference",
+      "status": "approved",
+      "scope": "project:synthetic-docs",
+      "authority": "canonical",
+      "title": "Documentation tone",
+      "summary": "Write end-user tutorials with short examples and a calm editorial voice.",
+      "applies_when": ["documentation", "tutorial", "writing"]
+    },
+    {
+      "id": "synthetic-memory-video-caption",
+      "type": "experience",
+      "status": "approved",
+      "scope": "project:synthetic-video",
+      "authority": "canonical",
+      "title": "Caption safe area",
+      "summary": "Keep lower-third captions inside a synthetic ten percent safe area.",
+      "applies_when": ["video", "caption", "render"]
+    },
+    {
+      "id": "synthetic-memory-database-maintenance",
+      "type": "procedure",
+      "status": "approved",
+      "scope": "project:synthetic-database",
+      "authority": "canonical",
+      "title": "Database maintenance",
+      "summary": "Take a verified backup before a schema migration and inspect the migration journal.",
+      "applies_when": ["database", "migration", "postgres"]
+    },
+    {
+      "id": "synthetic-memory-conflict-a",
+      "type": "fact",
+      "status": "approved",
+      "scope": "project:synthetic-conflict",
+      "authority": "canonical",
+      "title": "Synthetic deployment region A",
+      "summary": "The synthetic service must deploy to region alpha.",
+      "conflict_key": "synthetic-deployment-region",
+      "applies_when": ["deploy", "region", "synthetic-conflict"]
+    },
+    {
+      "id": "synthetic-memory-conflict-b",
+      "type": "fact",
+      "status": "approved",
+      "scope": "project:synthetic-conflict",
+      "authority": "canonical",
+      "title": "Synthetic deployment region B",
+      "summary": "The synthetic service must deploy to region beta.",
+      "conflict_key": "synthetic-deployment-region",
+      "applies_when": ["deploy", "region", "synthetic-conflict"]
+    },
+    {
+      "id": "synthetic-memory-stale-port",
+      "type": "fact",
+      "status": "obsolete",
+      "scope": "project:synthetic-provider",
+      "authority": "canonical",
+      "title": "Obsolete provider port",
+      "summary": "Use the obsolete fixed provider port.",
+      "applies_when": ["provider", "outage", "fallback"]
+    },
+    {
+      "id": "synthetic-memory-provider-fallback",
+      "type": "procedure",
+      "status": "approved",
+      "scope": "project:synthetic-provider",
+      "authority": "canonical",
+      "title": "Provider outage fallback",
+      "summary": "If the optional provider is unavailable, continue with local canonical knowledge and report degraded status.",
+      "applies_when": ["provider", "outage", "fallback", "canonical"]
+    },
+    {
+      "id": "synthetic-memory-rejected-shortcut",
+      "type": "procedure",
+      "status": "rejected",
+      "scope": "global",
+      "authority": "candidate",
+      "title": "Rejected shortcut",
+      "summary": "Skip verification and claim success immediately.",
+      "applies_when": ["release", "integration", "provider"]
+    },
+    {
+      "id": "synthetic-memory-superseded-command",
+      "type": "procedure",
+      "status": "superseded",
+      "scope": "global",
+      "authority": "canonical",
+      "title": "Superseded package command",
+      "summary": "Use the superseded unlocked package command for every release.",
+      "applies_when": ["release", "package", "artifact"]
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "relevant-cross-host-preference",
+      "category": "relevant",
+      "hosts": ["codex", "kimi-code", "deepseek-harness"],
+      "project_id": "synthetic-release",
+      "intent": {
+        "goal": "Package the synthetic JavaScript project for a release",
+        "task_type": "release",
+        "planned_steps": ["install dependencies", "build package"],
+        "intended_tools": ["shell", "filesystem-write"],
+        "target_paths": ["<SYNTHETIC_PROJECT>/dist"],
+        "constraints": [],
+        "assumptions": ["a lockfile exists"],
+        "risk_flags": ["release artifact"]
+      },
+      "baseline": { "steps": ["install dependencies", "build package"], "completed": true },
+      "expected": {
+        "required_memory_ids": ["synthetic-memory-package-manager"],
+        "forbidden_constraint_ids": ["synthetic-memory-rejected-shortcut", "synthetic-memory-superseded-command"],
+        "delta_steps": ["install with pnpm --frozen-lockfile"],
+        "plan_delta_required": true,
+        "completed": true
+      }
+    },
+    {
+      "id": "relevant-failure-before-action",
+      "category": "relevant",
+      "hosts": ["kimi-code"],
+      "project_id": "synthetic-agent-host",
+      "intent": {
+        "goal": "Install the synthetic coaching integration into Kimi Code",
+        "task_type": "integration-install",
+        "planned_steps": ["write integration configuration", "start host"],
+        "intended_tools": ["filesystem-write", "shell"],
+        "target_paths": ["<SYNTHETIC_HOME>/host-config.json"],
+        "constraints": ["preserve unrelated settings"],
+        "assumptions": [],
+        "risk_flags": ["external configuration mutation"]
+      },
+      "baseline": { "steps": ["write integration configuration", "start host"], "completed": false },
+      "expected": {
+        "required_memory_ids": ["synthetic-memory-preserve-config"],
+        "forbidden_constraint_ids": ["synthetic-memory-rejected-shortcut", "synthetic-memory-superseded-command"],
+        "delta_steps": ["preview owned changes", "preserve the unrelated sentinel", "read back and run a fresh-process canary", "roll back on failure"],
+        "plan_delta_required": true,
+        "completed": true
+      }
+    },
+    {
+      "id": "relevant-release-procedure",
+      "category": "relevant",
+      "hosts": ["codex"],
+      "project_id": "synthetic-release",
+      "intent": {
+        "goal": "Prepare the synthetic public release artifact",
+        "task_type": "release",
+        "planned_steps": ["build", "archive"],
+        "intended_tools": ["shell", "filesystem-write"],
+        "target_paths": ["<SYNTHETIC_PROJECT>/release"],
+        "constraints": [],
+        "assumptions": [],
+        "risk_flags": ["public release"]
+      },
+      "baseline": { "steps": ["build", "archive"], "completed": false },
+      "expected": {
+        "required_memory_ids": ["synthetic-memory-release-gate"],
+        "forbidden_constraint_ids": ["synthetic-memory-rejected-shortcut", "synthetic-memory-superseded-command"],
+        "delta_steps": ["run build and tests", "run privacy scan", "generate and verify SHA-256 checksums"],
+        "plan_delta_required": true,
+        "completed": true
+      }
+    },
+    {
+      "id": "control-doc-tone-vs-sqlite",
+      "category": "control",
+      "hosts": ["codex"],
+      "project_id": "synthetic-core",
+      "intent": {
+        "goal": "Optimize a SQLite index query",
+        "task_type": "database-query",
+        "planned_steps": ["inspect query plan", "add bounded index"],
+        "intended_tools": ["filesystem-read"],
+        "target_paths": ["<SYNTHETIC_PROJECT>/schema.sql"],
+        "constraints": [],
+        "assumptions": [],
+        "risk_flags": []
+      },
+      "baseline": { "steps": ["inspect query plan", "add bounded index"], "completed": true },
+      "expected": {
+        "required_memory_ids": [],
+        "forbidden_constraint_ids": ["synthetic-memory-doc-tone", "synthetic-memory-rejected-shortcut"],
+        "delta_steps": [],
+        "plan_delta_required": false,
+        "completed": true
+      }
+    },
+    {
+      "id": "control-video-vs-api",
+      "category": "control",
+      "hosts": ["kimi-code"],
+      "project_id": "synthetic-core",
+      "intent": {
+        "goal": "Refactor a local HTTP response serializer",
+        "task_type": "code-refactor",
+        "planned_steps": ["inspect serializer", "update tests"],
+        "intended_tools": ["filesystem-read", "filesystem-write"],
+        "target_paths": ["<SYNTHETIC_PROJECT>/serializer.ts"],
+        "constraints": [],
+        "assumptions": [],
+        "risk_flags": []
+      },
+      "baseline": { "steps": ["inspect serializer", "update tests"], "completed": true },
+      "expected": {
+        "required_memory_ids": [],
+        "forbidden_constraint_ids": ["synthetic-memory-video-caption", "synthetic-memory-rejected-shortcut"],
+        "delta_steps": [],
+        "plan_delta_required": false,
+        "completed": true
+      }
+    },
+    {
+      "id": "control-database-vs-css",
+      "category": "control",
+      "hosts": ["deepseek-harness"],
+      "project_id": "synthetic-dashboard",
+      "intent": {
+        "goal": "Fix a narrow-screen CSS overflow",
+        "task_type": "ui-fix",
+        "planned_steps": ["inspect layout", "test narrow viewport"],
+        "intended_tools": ["filesystem-read", "filesystem-write"],
+        "target_paths": ["<SYNTHETIC_PROJECT>/styles.css"],
+        "constraints": [],
+        "assumptions": [],
+        "risk_flags": []
+      },
+      "baseline": { "steps": ["inspect layout", "test narrow viewport"], "completed": true },
+      "expected": {
+        "required_memory_ids": [],
+        "forbidden_constraint_ids": ["synthetic-memory-database-maintenance", "synthetic-memory-rejected-shortcut"],
+        "delta_steps": [],
+        "plan_delta_required": false,
+        "completed": true
+      }
+    },
+    {
+      "id": "conflict-isolation",
+      "category": "conflict",
+      "hosts": ["codex"],
+      "project_id": "synthetic-conflict",
+      "intent": {
+        "goal": "Deploy the synthetic service to its approved region",
+        "task_type": "deployment-plan",
+        "planned_steps": ["resolve deployment region", "prepare deployment"],
+        "intended_tools": ["filesystem-read"],
+        "target_paths": ["<SYNTHETIC_PROJECT>/deploy.yml"],
+        "constraints": [],
+        "assumptions": [],
+        "risk_flags": ["conflicting facts"]
+      },
+      "baseline": { "steps": ["resolve deployment region", "prepare deployment"], "completed": false },
+      "expected": {
+        "required_memory_ids": [],
+        "required_conflict_ids": ["synthetic-memory-conflict-a", "synthetic-memory-conflict-b"],
+        "forbidden_constraint_ids": ["synthetic-memory-conflict-a", "synthetic-memory-conflict-b"],
+        "delta_steps": ["stop and request an authoritative region decision"],
+        "plan_delta_required": true,
+        "completed": true
+      }
+    },
+    {
+      "id": "provider-outage-fallback",
+      "category": "provider-outage",
+      "hosts": ["deepseek-harness"],
+      "project_id": "synthetic-provider",
+      "provider_mode": "unavailable",
+      "intent": {
+        "goal": "Continue local planning while the optional memory provider is unavailable",
+        "task_type": "provider-fallback",
+        "planned_steps": ["query provider", "stop if unavailable"],
+        "intended_tools": ["filesystem-read"],
+        "target_paths": ["<SYNTHETIC_PROJECT>/provider.json"],
+        "constraints": [],
+        "assumptions": ["canonical local knowledge exists"],
+        "risk_flags": ["provider outage"]
+      },
+      "baseline": { "steps": ["query provider", "stop if unavailable"], "completed": false },
+      "expected": {
+        "required_memory_ids": ["synthetic-memory-provider-fallback"],
+        "forbidden_constraint_ids": ["synthetic-memory-stale-port", "synthetic-memory-rejected-shortcut"],
+        "delta_steps": ["continue from local canonical knowledge", "record degraded provider status"],
+        "plan_delta_required": true,
+        "completed": true,
+        "degraded": true
+      }
+    }
+  ]
+}

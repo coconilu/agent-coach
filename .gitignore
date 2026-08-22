@@ -5,10 +5,12 @@ coverage/
 .env.*
 !.env.example
 *.log
+*.tsbuildinfo
 .DS_Store
 Thumbs.db
 .agent-coach/
 .ui-style-director/
+/.artifacts/
 
 /.opc/run.json
 /.opc/events.jsonl

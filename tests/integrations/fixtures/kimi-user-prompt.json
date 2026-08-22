@@ -1,0 +1,11 @@
+{
+  "hook_event_name": "UserPromptSubmit",
+  "session_id": "synthetic-kimi-session",
+  "cwd": "<SYNTHETIC_HOME>/kimi-project",
+  "prompt": [
+    {
+      "type": "text",
+      "text": "SYNTHETIC_KIMI_PROMPT_DO_NOT_FORWARD"
+    }
+  ]
+}

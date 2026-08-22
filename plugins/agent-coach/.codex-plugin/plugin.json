@@ -1,0 +1,35 @@
+{
+  "name": "agent-coach",
+  "version": "0.1.0",
+  "description": "Plan-aware coaching and governed memory for Codex.",
+  "author": {
+    "name": "coconilu",
+    "url": "https://github.com/coconilu"
+  },
+  "homepage": "https://github.com/coconilu/agent-coach",
+  "repository": "https://github.com/coconilu/agent-coach",
+  "license": "MIT",
+  "keywords": [
+    "agent-memory",
+    "coaching",
+    "governance"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agent Coach",
+    "shortDescription": "Recall governed experience before consequential work.",
+    "longDescription": "Connect Codex to the local Agent Coach daemon, revise plans with relevant experience, and propose reusable learning without retaining raw hook payloads.",
+    "developerName": "coconilu",
+    "category": "Productivity",
+    "capabilities": [
+      "Plan coaching",
+      "Governed memory",
+      "Local-first"
+    ],
+    "defaultPrompt": [
+      "Use Agent Coach before making changes.",
+      "Show which prior experience applies to this plan."
+    ]
+  },
+  "mcpServers": "./.mcp.json"
+}

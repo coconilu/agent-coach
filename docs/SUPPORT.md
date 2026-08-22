@@ -69,3 +69,13 @@ CLI 不直接修改 Kimi 私有 installed-state 文件，也不声称自动完�
 ## 7. Canary 证据
 
 每宿主保存：版本、OS、安装来源、manifest/hash、发现结果、covered action、unknown action、Gateway outage、uninstall/rollback 和 sentinel preservation。静态文件存在不能替代 fresh-process 发现。
+
+当前 `v0.1.0` H1 结果：
+
+| 宿主 | H1 结果 | 关键证据 |
+|---|---|---|
+| Codex 0.147.0 | PASS | 隔离 `CODEX_HOME` Marketplace add、Plugin add/list/remove、sentinel 保留 |
+| Kimi 0.38.0 | PASS | 隔离 `KIMI_CODE_HOME` 真实 TUI 安装、`state: ok`、Skill 1、MCP 1/1、remove 后 info=`not installed`、sentinel 保留 |
+| DSH rc.7 | PASS | 隔离 `DSH_HOME` tgz add、dump-config、真实包加载、remove、sentinel 保留 |
+
+Kimi 的远程 ZIP URL 可直接安装；本地 ZIP 文件路径在 `0.38.0` 会报“Plugin root is not a directory”，本地 H1 必须先解压后安装目录。H2 真实模型仍是条件式非阻断项。

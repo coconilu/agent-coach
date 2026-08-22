@@ -1,0 +1,6 @@
+# Agent Coach DSH rc.7 Bundle layer.
+- insert:
+    - id: agent-coach
+      name: '@agent-coach/dsh'
+      config:
+        mode: !!js process.env.AGENT_COACH_MODE ?? 'advisory'

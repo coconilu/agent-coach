@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Coach"
+  short_description: "Use governed memory before consequential work"
+  default_prompt: "Use Agent Coach to prepare this task before making changes."

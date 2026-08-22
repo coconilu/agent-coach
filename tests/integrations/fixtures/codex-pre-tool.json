@@ -1,0 +1,11 @@
+{
+  "hook_event_name": "PreToolUse",
+  "session_id": "synthetic-session",
+  "turn_id": "synthetic-turn",
+  "cwd": "<SYNTHETIC_HOME>/secret-project",
+  "tool_name": "Bash",
+  "tool_use_id": "synthetic-tool",
+  "tool_input": {
+    "command": "Set-Content -LiteralPath private.txt -Value SYNTHETIC_PRIVATE_ARGUMENT"
+  }
+}

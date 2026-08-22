@@ -1,0 +1,8 @@
+{
+  "hook_event_name": "UserPromptSubmit",
+  "session_id": "synthetic-session",
+  "turn_id": "synthetic-turn",
+  "cwd": "<SYNTHETIC_HOME>/secret-project",
+  "prompt": "SYNTHETIC_PRIVATE_PROMPT_DO_NOT_FORWARD",
+  "model": "synthetic-model"
+}

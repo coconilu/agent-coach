@@ -1,0 +1,10 @@
+{
+  "version": "2",
+  "plugins": [
+    {
+      "id": "agent-coach",
+      "displayName": "Agent Coach",
+      "source": "https://github.com/coconilu/agent-coach/releases/latest/download/agent-coach-kimi.zip"
+    }
+  ]
+}
