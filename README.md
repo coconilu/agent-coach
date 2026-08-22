@@ -18,7 +18,7 @@ Agent Coach 是一个本地优先、Agent 无关的“计划辅导 + 可治理�
 
 ## 当前状态
 
-`v0.1.0` MVP 已完成本地实现与 H0/H1 验收：Core、Daemon、MCP、CLI、Dashboard，以及 Codex `0.147.0`、Kimi Code `0.38.0`、DSH `0.1.0-rc.7` 的真实宿主加载均已通过。H2 真实模型行为仍是条件式未验收项，不能被 H1 替代。
+[`v0.1.0`](https://github.com/coconilu/agent-coach/releases/tag/v0.1.0) MVP 已发布并完成公开 fresh-clone 独立验收：Core、Daemon、MCP、CLI、Dashboard，以及 Codex `0.147.0`、Kimi Code `0.38.0`、DSH `0.1.0-rc.7` 的真实宿主加载均已通过。Windows 主构建/测试/评测门禁与 Windows、Ubuntu、macOS 隐私门禁全部通过；完整证据见 [独立 QA 报告](.opc/qa/independent-qa.md)。H2 真实模型行为仍是条件式未验收项，不能被 H1 替代。
 
 当前确定性评测结果：Treatment `10/10`、相关 Plan Delta `3/3`、不相关任务负迁移 `0`；1000 条合成记忆下 keyless prepare P95 约 `24 ms`。这些结果证明协议与检索闭环，不代表任意模型或任意任务都必然提升。
 
@@ -26,7 +26,7 @@ Agent Coach 是一个本地优先、Agent 无关的“计划辅导 + 可治理�
 
 | 组件 | 首发验收版本 | 当前证据语义 |
 |---|---:|---|
-| Windows | Windows 11 x64 | 目标阻断平台；当前主机已通过，干净远端 CI 待读回 |
+| Windows | Windows 11 x64 | 目标阻断平台；公开 fresh clone 与远端 Windows CI 均 PASS |
 | Node.js | `24.15.0` | 本机已确认，使用原生 `node:sqlite` |
 | Codex CLI | `0.147.0` | H1：Marketplace/Plugin/Skill/MCP/Hook/卸载 PASS |
 | Kimi Code | `0.38.0` | H1：交互安装、Skill 1、MCP 1/1、卸载 PASS |
@@ -72,7 +72,7 @@ node dist/cli.js demo
 node dist/cli.js start
 ```
 
-`start` 会输出一个两分钟内有效的一次性 `dashboard_url`。在浏览器打开后，URL 会自动移除 nonce/CSRF 参数；Dashboard 使用 SameSite session、CSRF、Origin/Host 检查和 CSP。默认数据位于用户本地目录，不在源码 checkout 内。
+`start` 会输出一个两分钟内有效的一次性 `dashboard_url`。浏览器完成 nonce 交换后会跳转到无 token URL；Dashboard 使用 HttpOnly/SameSite session、可恢复 CSRF、Origin/Host 检查和 CSP。默认数据位于用户本地目录，不在源码 checkout 内。
 
 常用命令：
 
@@ -98,7 +98,7 @@ codex plugin add agent-coach@agent-coach
 
 ### Kimi Code 0.38
 
-GitHub Release 发布后，在 Kimi 中运行：
+在 Kimi 中直接安装当前 GitHub Release：
 
 ```text
 /plugins install https://github.com/coconilu/agent-coach/releases/latest/download/agent-coach-kimi.zip

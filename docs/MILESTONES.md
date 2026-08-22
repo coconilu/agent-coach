@@ -94,11 +94,13 @@ Gate：未达到阈值只能报告实验结果，不得宣称改善已经成立�
 
 目标：独立审查者可以从公开仓库复现核心体验。
 
-- [ ] Windows 干净 clone 安装、构建、测试和 demo 成功。
-- [ ] 独立 QA 按 `docs/ACCEPTANCE.md` 给出 PASS/FAIL/BLOCKED，并修复所有阻断发现。
+- [x] Windows 干净 clone 安装、构建、测试和 demo 成功。
+- [x] 独立 QA 按 `docs/ACCEPTANCE.md` 给出 PASS/FAIL/BLOCKED，并修复所有阻断发现。
 - [x] UI 对照概念图完成视觉复核、键盘/焦点/对比度/窄屏验收。
-- [ ] 隐私、secret、依赖审计、Windows CI、锁文件和发布产物校验和通过。
+- [x] 隐私、secret、依赖审计、Windows CI、锁文件和发布产物校验和通过。
 - [x] README 提供五分钟 Demo、真实限制和数据删除说明。
-- [ ] GitHub visibility、CI、Commit/Tag、Release 产物和本地 clean status 读回。
+- [x] GitHub visibility、CI、Commit/Tag、Release 产物和本地 clean status 读回。
 
 Gate：所有 mandatory 阻断项 PASS。条件式 H2 可以是 `UNAVAILABLE/BLOCKED`，但 README/Release 必须如实限制声明；TIMEOUT、SKIPPED 和未验版本不是 PASS。
+
+证据：独立报告 `.opc/qa/independent-qa.md`；公开实现提交与 `v0.1.0` Tag 均为 `c8cb0296881e573429afc9d6fd704e198d0cae5d`；CI Run `32589619364` 四个 Job 全部 PASS；Release Kimi ZIP 下载后 SHA-256 为 `37950f2e722575a577fd3a1109bc882200dceab8128f41b07fcdf088a34798e6`，与 GitHub digest 和发布清单一致。
